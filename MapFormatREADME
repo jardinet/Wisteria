@@ -1,0 +1,65 @@
+Map Exemple :
+
+nby*nbx					// Dimensions
+posy posx				// Start position
+nbtx 					// Textures
+path 1
+path 2
+path x
+int int int int int		// Map
+int int int int int
+int int int int int
+nbpor					// Portals
+posy posx isredirect nextx nexty rot
+
+
+Dimensions : Y*X number of block you wish to generate.
+Our program accepts map dimensions ranging between 5*5 et 1000*1000 blocks.
+
+Start position : Y X position indexes. Outer blocks, portals and four wall blocks 
+are invalid player positions. /!\ The player must be inside the map.
+
+Textures : The total number of textures, then one texture path per line.
+The number of provided texture paths and number of textures should match.
+/!\ Paths should work from where you execute Wolf3D.
+
+Map : The map must have a number of lines equal to number Y provided in dimensions.
+Every line should contain X (provided in dimensions) number of digital value
+representing a block separated by a space equal.
+A valid digital value is a value for which every 8 bits represents a valid
+texture ID. /!\ Keep in mind the number of textures you provide.
+A valid texture ID between (1 to 255 max possible textures) in one of the 4 bytes
+ will activate the corresponding wall.
+- West facing wall : bits 1 to 8 		OOOX
+- Est facing wall : bits 9 to 16		OOXO
+- North facing wall : bits 17 to 24		OXOO
+- South facing wall : bits 25 to 32.	XOOO
+If one or more bytes are left at 0, the corresponding walls of the block will
+not be displayed.
+/!\ Outer blocks must always have 4 walls, so 4 valid texture ID.
+
+Portals : The total number of portals is specified on the first line of this section.
+Use one line per portal to specify the 6 following values :
+1. Y position of the portal on the map.
+2. X position of the portal on the map.
+3. A value ranging from 1 to 15 : similar to the bytes system used for the blocks,
+this time the active bits of the value determine the face of the block that will
+become a portal. For exemple the value 8 will give you a south facing portal.
+4. A value that will be added to the current Y player position to teleport them :
+must remain within map borders. Outer blocks are invalid positions.
+5. A value that will be added to the current X player position to teleport them :
+must remain within map borders. Outer blocks are invalid positions.
+6. A value between 0 and 3 that will rotate 90°*entered_value clockwise the
+camera direction.
+/!\ The portal redirection coordinates are not tied to the blocks themselves but
+to the xy axis. Therefore the teleportation point is dependant on the rotation value.
+Users should be aware of this when teleporting on four wall blocks (=/= outer blocks).
+Reminder : the xy axis is inverted, the top left coordinates are 0, 0.
+North (or diry = -1) arrival point : on top of the north wall of the portal's exit block,
+facing north (y = block->y - 0.0001)
+South (or diry = 1) arrival point : just below the north wall of the portal's exit block,
+facing south (y = block->y)
+West (or dirx = -1) arrival point : left side of the western wall of the portal's exit block,
+facing west (x = block->x - 0.0001)
+East (or dirx = 1) arrival point : right side the western wall of the portal's exit block,
+facing east (x = block->x)
